@@ -1,0 +1,7 @@
+C:\Users\User\Documents\Visual Studio 2017\Projects\Task4_FileParser\Task4_FileParser\obj\Debug\Task4_FileParser.csprojAssemblyReference.cache
+C:\Users\User\Documents\Visual Studio 2017\Projects\Task4_FileParser\Task4_FileParser\obj\Debug\Task4_FileParser.csproj.CoreCompileInputs.cache
+C:\Users\User\Documents\Visual Studio 2017\Projects\Task4_FileParser\Task4_FileParser\bin\Debug\Task4_FileParser.exe.config
+C:\Users\User\Documents\Visual Studio 2017\Projects\Task4_FileParser\Task4_FileParser\bin\Debug\Task4_FileParser.exe
+C:\Users\User\Documents\Visual Studio 2017\Projects\Task4_FileParser\Task4_FileParser\bin\Debug\Task4_FileParser.pdb
+C:\Users\User\Documents\Visual Studio 2017\Projects\Task4_FileParser\Task4_FileParser\obj\Debug\Task4_FileParser.exe
+C:\Users\User\Documents\Visual Studio 2017\Projects\Task4_FileParser\Task4_FileParser\obj\Debug\Task4_FileParser.pdb
