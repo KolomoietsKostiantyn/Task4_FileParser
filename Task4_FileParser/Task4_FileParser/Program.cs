@@ -15,7 +15,7 @@ namespace Task4_FileParser
         static void Main(string[] args)
         {
 
-            IUI visualizator = new ConsoleInformer();
+            IVisualizer visualizator = new ConsoleInformer();
             Controller cntrl = new Controller(args, visualizator);
             cntrl.Start();
         }

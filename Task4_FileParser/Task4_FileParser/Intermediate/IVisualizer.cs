@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Task4_FileParser.Intermediate
 {
-    interface IUI
+    interface IVisualizer
     {
-        void AnswerCatcher(WorkResult masage, int count);
+        void AnswerCatcher(WorkResult masage, int count = -1);
     }
 }

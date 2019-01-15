@@ -58,12 +58,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Intermediate\IUI.cs" />
+    <Compile Include="Intermediate\IVisualizer.cs" />
     <Compile Include="Intermediate\WorkResult.cs" />
     <Compile Include="Logick\Controller.cs" />
     <Compile Include="Logick\Dates.cs" />
     <Compile Include="Logick\Parser.cs" />
-    <Compile Include="Logick\ResultInformer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logick\IResourceProvider.cs" />

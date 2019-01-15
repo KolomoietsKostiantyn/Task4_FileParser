@@ -11,7 +11,7 @@ namespace Task4_FileParser.Logick
     {
         #region Variables
         private readonly int _minInnerParan = 2;
-        private readonly int _maxInnerParan = 3;
+        private readonly int _maxInnerParam = 3;
         private IResourceProvider _provider;
         private bool _isNededOverwrite = false; // флаг показывающий встречали мы хоть одно вхождение искомой строки
         private Queue<char> _buffer = new Queue<char>(); 
@@ -20,24 +20,24 @@ namespace Task4_FileParser.Logick
         private bool isAllFileReaded = false;
         private string _search = null; // искомый текст
         private string _replacement = null; // текст замены
-        private readonly int _stepLimit = 1000000; //количество считуемых символов за 1ну проходку
+        private readonly int _stepLimit = 10000000; //количество считуемых символов за 1ну проходку
         #endregion
 
         public Parser(string[] arr)
         {
             _provider = new WorkerWithFileSystem();
-            Validation(arr);
+            ValidationArr(arr);
             ProcessingInput(arr);
             _provider.AddResource(arr[(int)Dates.Path]);
         }
 
-        private void Validation(string[] arr)
+        private void ValidationArr(string[] arr)
         {
             if (arr == null)
             {
                 throw new NullReferenceException();
             }
-            if (arr.Length < _minInnerParan || arr.Length > _maxInnerParan)
+            if (arr.Length < _minInnerParan || arr.Length > _maxInnerParam)
             {
                 throw new ArgumentException();
             }
@@ -53,7 +53,7 @@ namespace Task4_FileParser.Logick
         private void ProcessingInput(string[] arr) //обработка входных данных
         {
             _search = arr[(int)Dates.Serch];
-            if (arr.Length == _maxInnerParan)
+            if (arr.Length == _maxInnerParam)
             {
                 _replacement = arr[(int)Dates.Replacement];
             }
@@ -77,7 +77,6 @@ namespace Task4_FileParser.Logick
             return result;
         }
 
-
         private void StartReplesment()
         {
             bool result;
@@ -95,7 +94,7 @@ namespace Task4_FileParser.Logick
                 if (isAllFileReaded) // весь файл вычитан просто записываем до конца
                 {
                     _provider.Seek(_writerPozition, SeekOrigin.Begin);
-                    while (_buffer.Count != 0)
+                    while (_buffer.Count != 0) 
                     {
                         _provider.Write(_buffer.Dequeue());
                     }
@@ -142,51 +141,26 @@ namespace Task4_FileParser.Logick
                     }
                 }
             }
+
             return result;
         }
 
         private bool Read()
         {
             int curentStepValue = 0;
-            while (!_provider.EndValidation()) 
+            while (!_provider.EndValidation() || !(curentStepValue >= _stepLimit)) 
             {
-                if (curentStepValue >= _stepLimit)
-                {
-                    break;
-                }
                 if (_isNededOverwrite)
-                {
+                { 
                     curentStepValue++;
                     _readerPozition++;
                     char currentReadingSign = _provider.Read(); //проверка совпадения с искомым
                     if (currentReadingSign == _search[0])
                     {
-                        bool isCoincidence = true;
-                        int steps = 0;
-                        for (int i = 1; i < _search.Length; i++)
+                        int steps = 0;                       
+                        if (IsRestWordMatchesRepeated(_search, out steps, ref curentStepValue, ref _readerPozition))// есть полное совпадения, просто вместо вхождения заносим нужный
                         {
-                            if (_provider.EndValidation())
-                            {
-                                isCoincidence = false;
-                                break;   
-                            }
-                            _readerPozition++;
-                            curentStepValue++;
-                            steps++;
-                            char nextSymbol = _provider.Read();
-                            if (nextSymbol != _search[i])
-                            {
-                                _readerPozition--;
-                                isCoincidence = false;
-                                break;
-                            }
-                        }
-                        if (isCoincidence)// есть полное совпадения, просто вместо вхождения заносим нужный
-                        {
-                            for (int i = 0; i < _replacement.Length; i++)
-                            {
-                                _buffer.Enqueue(_replacement[i]);
-                            }
+                            AddStringToBuffer(_replacement);
                         }
                         else // совпадения не найденно переводим каретку к началу и записываем до n-го символа 
                         {
@@ -195,8 +169,7 @@ namespace Task4_FileParser.Logick
                             _provider.Seek(-steps, SeekOrigin.Current);
                             for (int i = 0; i < steps; i++)
                             {
-                                char nextSymbol =  _provider.Read();
-                                _buffer.Enqueue(nextSymbol);
+                                _buffer.Enqueue(_provider.Read());
                             }
                         }
                     }
@@ -213,33 +186,10 @@ namespace Task4_FileParser.Logick
                     char currentReadingSign = _provider.Read();
                     if (currentReadingSign == _search[0])
                     {
-                        bool isCoincidence = true;
-                        for (int i = 1; i < _search.Length; i++)
+                        if (IsRestWordMatchesFirst(_search, ref _writerPozition, ref curentStepValue, ref _readerPozition)) // записуем в буфер
                         {
-                            if (_provider.EndValidation())
-                            {
-                                isCoincidence = false;
-                                break;
-                            }
-                            _readerPozition++;
-                            curentStepValue++;
-                            char nextSymbol = _provider.Read();
-                            if (nextSymbol != _search[i])
-                            {
-                                _readerPozition--;
-                                _writerPozition--;
-                                _provider.Seek(-1, SeekOrigin.Current);
-                                _writerPozition = _readerPozition;
-                                isCoincidence = false;
-                                break;
-                            }
-                        }
-                        if (isCoincidence) // записуем в буфер
-                        {
-                            for (int i = 0; i < _replacement.Length; i++)
-                            {
-                                _buffer.Enqueue(_replacement[i]);
-                            }
+                            _provider.Seek(-1, SeekOrigin.Current); 
+                            AddStringToBuffer(_replacement);
                             _isNededOverwrite = true;
                             _writerPozition--; 
                         }
@@ -252,7 +202,71 @@ namespace Task4_FileParser.Logick
                 readingFinished = true;
                 isAllFileReaded = true;
             }
+
             return readingFinished;
+        }
+
+        private void AddStringToBuffer(string inner)
+        {
+            if (inner == null)
+            {
+                throw new NullReferenceException();
+            }
+            for (int i = 0; i < inner.Length; i++)
+            {
+                _buffer.Enqueue(inner[i]);
+            }
+        }
+
+        private bool IsRestWordMatchesFirst(string _search, ref int _writerPozition, ref int curentStepValue, ref int _readerPozition)
+        {
+            bool isCoincidence = true;
+            for (int i = 1; i < _search.Length; i++)
+            {
+                if (_provider.EndValidation())
+                {
+                    isCoincidence = false;
+                    break;
+                }
+                _readerPozition++;
+                curentStepValue++;
+                char nextSymbol = _provider.Read();
+                if (nextSymbol != _search[i])
+                {
+                    _readerPozition--;
+                    _writerPozition--;
+                    _writerPozition = _readerPozition;
+                    isCoincidence = false;
+                    break;
+                }
+            }
+
+            return isCoincidence;
+        }
+
+        private bool IsRestWordMatchesRepeated(string _search, out int steps, ref int curentStepValue, ref int _readerPozition)
+        {
+            bool isCoincidence = true;
+            steps = 0;
+            for (int i = 1; i < _search.Length; i++)
+            {
+                if (_provider.EndValidation())
+                {
+                    isCoincidence = false;
+                    break;
+                }
+                _readerPozition++;
+                curentStepValue++;
+                steps++;
+                char nextSymbol = _provider.Read();
+                if (nextSymbol != _search[i])
+                {
+                    _readerPozition--;
+                    isCoincidence = false;
+                    break;
+                }
+            }
+            return isCoincidence;
         }
     }
 }

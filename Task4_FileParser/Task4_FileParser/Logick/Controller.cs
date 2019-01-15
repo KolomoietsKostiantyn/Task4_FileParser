@@ -10,10 +10,16 @@ namespace Task4_FileParser.Logick
 {
     class Controller
     {
-        public Controller(string[] arr, IUI visualizator)
-        {
+        private bool isValidated = true;
+        private string[] _arr;
+        private Parser _txtFileParser;
+        private IVisualizer _visualizator;
 
-            _resultInformer += visualizator.AnswerCatcher;
+
+
+        public Controller(string[] arr, IVisualizer visualizator)
+        {
+            _visualizator = visualizator;
             _arr = arr;
             isValidated = Validation(arr);
         }
@@ -21,15 +27,15 @@ namespace Task4_FileParser.Logick
         private bool Validation(string[] arr)
         {
             bool result = true;
-            if (arr.Length == 0)
+            if (arr.Length == 0) 
             {
                 result = false;
-                if (_resultInformer != null)
+                if (_visualizator != null)
                 {
-
-                    _resultInformer(WorkResult.NeedInstruction);
+                    _visualizator.AnswerCatcher(WorkResult.NeedInstruction);
                 }
             }
+
             return result;
         }
 
@@ -80,25 +86,11 @@ namespace Task4_FileParser.Logick
                 {
                     count = _txtFileParser.Start();
                 }
-                if (_resultInformer != null)
+                if (_visualizator != null)
                 {
-                    _resultInformer(result, count);
+                    _visualizator.AnswerCatcher(result, count);
                 }
             }
         }
-
-
-
-
-        private bool isValidated = true;
-        private ResultInformer _resultInformer;
-        private string[] _arr;
-        Parser _txtFileParser;
-
-
-        
-
-
-
     }
 }

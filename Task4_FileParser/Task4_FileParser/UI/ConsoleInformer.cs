@@ -7,15 +7,14 @@ using Task4_FileParser.Intermediate;
 
 namespace Task4_FileParser.UI
 {
-    class ConsoleInformer : IUI
+    class ConsoleInformer : IVisualizer
     {
         public ConsoleInformer()
         {
 
         }
 
-
-        public void AnswerCatcher(WorkResult masage, int count)
+        public void AnswerCatcher(WorkResult masage, int count = -1)
         {
             string result = "";
             switch (masage)
@@ -55,7 +54,7 @@ namespace Task4_FileParser.UI
                     break;
             }
             Console.WriteLine(result);
-            Console.Read();
+            Console.ReadKey();
         }
     }
 }

@@ -34,6 +34,7 @@ namespace Task4_FileParser.Logick
             }
             _reader = null;
             _writer = null;
+
             return result;
         }
 
@@ -82,8 +83,8 @@ namespace Task4_FileParser.Logick
             {
                 result = true;
             }
-            return result;
 
+            return result;
         }
 
         public char Read()
