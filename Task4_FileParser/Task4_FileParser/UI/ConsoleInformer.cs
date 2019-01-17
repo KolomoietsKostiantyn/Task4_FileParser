@@ -9,11 +9,6 @@ namespace Task4_FileParser.UI
 {
     class ConsoleInformer : IVisualizer
     {
-        public ConsoleInformer()
-        {
-
-        }
-
         public void AnswerCatcher(WorkResult masage, int count = -1)
         {
             string result = "";

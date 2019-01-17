@@ -13,14 +13,14 @@ namespace Task4_FileParser.Logick
         private readonly int _minInnerParan = 2;
         private readonly int _maxInnerParam = 3;
         private IResourceProvider _provider;
-        private bool _isNededOverwrite = false; // флаг показывающий встречали мы хоть одно вхождение искомой строки
+        private bool _isNededOverwrite = false; 
         private Queue<char> _buffer = new Queue<char>(); 
         private int _readerPozition = 0;
         private int _writerPozition = 0;
         private bool isAllFileReaded = false;
-        private string _search = null; // искомый текст
-        private string _replacement = null; // текст замены
-        private readonly int _stepLimit = 10000000; //количество считуемых символов за 1ну проходку
+        private string _search = null; 
+        private string _replacement = null; 
+        private readonly int _stepLimit = 10000000; 
         #endregion
 
         public Parser(string[] arr)
@@ -50,7 +50,7 @@ namespace Task4_FileParser.Logick
             }
         }
 
-        private void ProcessingInput(string[] arr) //обработка входных данных
+        private void ProcessingInput(string[] arr)
         {
             _search = arr[(int)Dates.Serch];
             if (arr.Length == _maxInnerParam)
@@ -62,12 +62,12 @@ namespace Task4_FileParser.Logick
         public int Start()
         {
             int result = -1;
-            if (_replacement != null) // если поле замены не пустое, то заменяем 
+            if (_replacement != null) 
             {
                 _provider.ReplacementPreparation();
                 StartReplesment();
             }
-            else // иначе просто подсчет
+            else 
             {
                 _provider.ReadingPreparation();
                 result = CountOccurrences();
@@ -91,7 +91,7 @@ namespace Task4_FileParser.Logick
         {
             if (_buffer.Count != 0)
             {
-                if (isAllFileReaded) // весь файл вычитан просто записываем до конца
+                if (isAllFileReaded) 
                 {
                     _provider.Seek(_writerPozition, SeekOrigin.Begin);
                     while (_buffer.Count != 0) 
@@ -99,7 +99,7 @@ namespace Task4_FileParser.Logick
                         _provider.Write(_buffer.Dequeue());
                     }
                 }
-                else // пишим пока не упремся в _readerPozition
+                else 
                 {
                     _provider.Seek(_writerPozition, SeekOrigin.Begin);
                     while (_writerPozition != _readerPozition)
@@ -135,7 +135,7 @@ namespace Task4_FileParser.Logick
                             break;
                         }
                     }
-                    if (isCoincidence)// есть полное совпадения, просто вместо вхождения заносим нужный
+                    if (isCoincidence)
                     {
                         result++;
                     }
@@ -154,15 +154,15 @@ namespace Task4_FileParser.Logick
                 { 
                     curentStepValue++;
                     _readerPozition++;
-                    char currentReadingSign = _provider.Read(); //проверка совпадения с искомым
+                    char currentReadingSign = _provider.Read(); 
                     if (currentReadingSign == _search[0])
                     {
                         int steps = 0;                       
-                        if (IsRestWordMatchesRepeated(_search, out steps, ref curentStepValue, ref _readerPozition))// есть полное совпадения, просто вместо вхождения заносим нужный
+                        if (IsRestWordMatchesRepeated(_search, out steps, ref curentStepValue, ref _readerPozition))
                         {
                             AddStringToBuffer(_replacement);
                         }
-                        else // совпадения не найденно переводим каретку к началу и записываем до n-го символа 
+                        else 
                         {
                             
                             _buffer.Enqueue(currentReadingSign);
@@ -186,7 +186,7 @@ namespace Task4_FileParser.Logick
                     char currentReadingSign = _provider.Read();
                     if (currentReadingSign == _search[0])
                     {
-                        if (IsRestWordMatchesFirst(_search, ref _writerPozition, ref curentStepValue, ref _readerPozition)) // записуем в буфер
+                        if (IsRestWordMatchesFirst(_search, ref _writerPozition, ref curentStepValue, ref _readerPozition)) 
                         {
                             _provider.Seek(-1, SeekOrigin.Current); 
                             AddStringToBuffer(_replacement);

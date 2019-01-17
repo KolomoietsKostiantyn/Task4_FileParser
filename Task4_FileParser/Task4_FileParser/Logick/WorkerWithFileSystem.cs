@@ -76,7 +76,7 @@ namespace Task4_FileParser.Logick
             _stream.Seek(offset, origin);
         }
 
-        public bool EndValidation() // true если там конец
+        public bool EndValidation() 
         {
             bool result = false;
             if (_reader.PeekChar() == -1)
