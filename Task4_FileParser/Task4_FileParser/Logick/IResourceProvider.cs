@@ -16,5 +16,6 @@ namespace Task4_FileParser.Logick
         bool EndValidation();
         char Read();
         void Write(char sign);
+        void CutOff();
     }
 }

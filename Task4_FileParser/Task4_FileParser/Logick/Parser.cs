@@ -96,8 +96,10 @@ namespace Task4_FileParser.Logick
                     _provider.Seek(_writerPozition, SeekOrigin.Begin);
                     while (_buffer.Count != 0) 
                     {
+                        _writerPozition++;
                         _provider.Write(_buffer.Dequeue());
                     }
+                    _provider.CutOff();
                 }
                 else 
                 {
@@ -148,7 +150,7 @@ namespace Task4_FileParser.Logick
         private bool Read()
         {
             int curentStepValue = 0;
-            while (!_provider.EndValidation() || !(curentStepValue >= _stepLimit)) 
+            while (!_provider.EndValidation() && !(curentStepValue >= _stepLimit)) 
             {
                 if (_isNededOverwrite)
                 { 
@@ -157,8 +159,9 @@ namespace Task4_FileParser.Logick
                     char currentReadingSign = _provider.Read(); 
                     if (currentReadingSign == _search[0])
                     {
-                        int steps = 0;                       
-                        if (IsRestWordMatchesRepeated(_search, out steps, ref curentStepValue, ref _readerPozition))
+                        int steps = 0;
+                        string localBuffer;
+                        if (IsRestWordMatchesRepeated(_search, out steps, ref curentStepValue, ref _readerPozition, out localBuffer))
                         {
                             AddStringToBuffer(_replacement);
                         }
@@ -166,11 +169,16 @@ namespace Task4_FileParser.Logick
                         {
                             
                             _buffer.Enqueue(currentReadingSign);
-                            _provider.Seek(-steps, SeekOrigin.Current);
-                            for (int i = 0; i < steps; i++)
+                            foreach (char item in localBuffer)
                             {
-                                _buffer.Enqueue(_provider.Read());
+                                _buffer.Enqueue(item);
                             }
+                            
+                            //_provider.Seek(-1, SeekOrigin.Current);
+                            //for (int i = 0; i < steps; i++)
+                            //{
+                            //    _buffer.Enqueue(_provider.Read());
+                            //}
                         }
                     }
                     else
@@ -188,7 +196,7 @@ namespace Task4_FileParser.Logick
                     {
                         if (IsRestWordMatchesFirst(_search, ref _writerPozition, ref curentStepValue, ref _readerPozition)) 
                         {
-                            _provider.Seek(-1, SeekOrigin.Current); 
+                            //_provider.Seek(-1, SeekOrigin.Current); 
                             AddStringToBuffer(_replacement);
                             _isNededOverwrite = true;
                             _writerPozition--; 
@@ -244,8 +252,9 @@ namespace Task4_FileParser.Logick
             return isCoincidence;
         }
 
-        private bool IsRestWordMatchesRepeated(string _search, out int steps, ref int curentStepValue, ref int _readerPozition)
+        private bool IsRestWordMatchesRepeated(string _search, out int steps, ref int curentStepValue, ref int _readerPozition,out string passedSigns)
         {
+            StringBuilder _stringBuilder = new StringBuilder();
             bool isCoincidence = true;
             steps = 0;
             for (int i = 1; i < _search.Length; i++)
@@ -259,6 +268,7 @@ namespace Task4_FileParser.Logick
                 curentStepValue++;
                 steps++;
                 char nextSymbol = _provider.Read();
+                _stringBuilder.Append(nextSymbol);
                 if (nextSymbol != _search[i])
                 {
                     _readerPozition--;
@@ -266,6 +276,8 @@ namespace Task4_FileParser.Logick
                     break;
                 }
             }
+            passedSigns = _stringBuilder.ToString();
+
             return isCoincidence;
         }
     }

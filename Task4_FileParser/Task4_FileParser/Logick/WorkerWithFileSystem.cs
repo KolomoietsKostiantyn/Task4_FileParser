@@ -102,5 +102,13 @@ namespace Task4_FileParser.Logick
             _stream.Close();
             _stream.Dispose();
         }
+
+        public void CutOff()
+        {
+            while (_reader.PeekChar() != -1)
+            {
+                _writer.Write('\0');
+            }
+        }
     }
 }
