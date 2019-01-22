@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Task4_FileParser.Logick
 {
-    class WorkerWithFileSystem : IResourceProvider
+    class FileSystemProvider : IResourceProvider
     {
         #region Variables
         private string _encoding = "Windows-1251";
@@ -16,7 +16,7 @@ namespace Task4_FileParser.Logick
         private BinaryWriter _writer;
         #endregion
 
-        public WorkerWithFileSystem()
+        public FileSystemProvider()
         {
 
         }

@@ -25,7 +25,7 @@ namespace Task4_FileParser.Logick
 
         public Parser(string[] arr)
         {
-            _provider = new WorkerWithFileSystem();
+            _provider = new FileSystemProvider();
             ValidationArr(arr);
             ProcessingInput(arr);
             _provider.AddResource(arr[(int)Dates.Path]);
