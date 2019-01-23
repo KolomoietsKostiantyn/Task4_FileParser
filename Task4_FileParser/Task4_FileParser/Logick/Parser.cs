@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+    [assembly: InternalsVisibleTo("FileParser.Test")]
 namespace Task4_FileParser.Logick
 {
-    class Parser
+
+    internal class Parser
     {
         #region Variables
         private readonly int _minInnerParan = 2;
@@ -20,8 +23,12 @@ namespace Task4_FileParser.Logick
         private bool isAllFileReaded = false;
         private string _search = null; 
         private string _replacement = null; 
-        private readonly int _stepLimit = 10000000; 
+        private readonly int _stepLimit = 10000000;
         #endregion
+
+        public Parser()
+        {
+        }
 
         public Parser(string[] arr)
         {
@@ -31,7 +38,7 @@ namespace Task4_FileParser.Logick
             _provider.AddResource(arr[(int)Dates.Path]);
         }
 
-        private void ValidationArr(string[] arr)
+        internal bool ValidationArr(string[] arr)
         {
             if (arr == null)
             {
@@ -48,9 +55,11 @@ namespace Task4_FileParser.Logick
                     throw new NullReferenceException();
                 }
             }
+
+            return true;
         }
 
-        private void ProcessingInput(string[] arr)
+        internal void ProcessingInput(string[] arr)
         {
             _search = arr[(int)Dates.Serch];
             if (arr.Length == _maxInnerParam)
@@ -77,7 +86,7 @@ namespace Task4_FileParser.Logick
             return result;
         }
 
-        private void StartReplesment()
+        internal void StartReplesment()
         {
             bool result;
             do
@@ -87,7 +96,7 @@ namespace Task4_FileParser.Logick
             } while (!result);
         }
 
-        private void Write()
+        internal void Write()
         {
             if (_buffer.Count != 0)
             {
@@ -113,7 +122,7 @@ namespace Task4_FileParser.Logick
             }
         }
 
-        private int CountOccurrences()
+        internal int CountOccurrences()
         {
             int result = 0;
             while ( !_provider.EndValidation())
@@ -147,7 +156,7 @@ namespace Task4_FileParser.Logick
             return result;
         }
 
-        private bool Read()
+        internal bool Read()
         {
             int curentStepValue = 0;
             while (!_provider.EndValidation() && !(curentStepValue >= _stepLimit)) 
@@ -167,18 +176,11 @@ namespace Task4_FileParser.Logick
                         }
                         else 
                         {
-                            
                             _buffer.Enqueue(currentReadingSign);
                             foreach (char item in localBuffer)
                             {
                                 _buffer.Enqueue(item);
-                            }
-                            
-                            //_provider.Seek(-1, SeekOrigin.Current);
-                            //for (int i = 0; i < steps; i++)
-                            //{
-                            //    _buffer.Enqueue(_provider.Read());
-                            //}
+                            }       
                         }
                     }
                     else
@@ -196,7 +198,6 @@ namespace Task4_FileParser.Logick
                     {
                         if (IsRestWordMatchesFirst(_search, ref _writerPozition, ref curentStepValue, ref _readerPozition)) 
                         {
-                            //_provider.Seek(-1, SeekOrigin.Current); 
                             AddStringToBuffer(_replacement);
                             _isNededOverwrite = true;
                             _writerPozition--; 
@@ -214,7 +215,7 @@ namespace Task4_FileParser.Logick
             return readingFinished;
         }
 
-        private void AddStringToBuffer(string inner)
+        internal void AddStringToBuffer(string inner)
         {
             if (inner == null)
             {
@@ -226,7 +227,7 @@ namespace Task4_FileParser.Logick
             }
         }
 
-        private bool IsRestWordMatchesFirst(string _search, ref int _writerPozition, ref int curentStepValue, ref int _readerPozition)
+        internal bool IsRestWordMatchesFirst(string _search, ref int _writerPozition, ref int curentStepValue, ref int _readerPozition)
         {
             bool isCoincidence = true;
             for (int i = 1; i < _search.Length; i++)
@@ -252,7 +253,7 @@ namespace Task4_FileParser.Logick
             return isCoincidence;
         }
 
-        private bool IsRestWordMatchesRepeated(string _search, out int steps, ref int curentStepValue, ref int _readerPozition,out string passedSigns)
+        internal bool IsRestWordMatchesRepeated(string _search, out int steps, ref int curentStepValue, ref int _readerPozition,out string passedSigns)
         {
             StringBuilder _stringBuilder = new StringBuilder();
             bool isCoincidence = true;

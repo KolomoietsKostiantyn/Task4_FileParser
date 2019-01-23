@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task4_FileParser", "Task4_FileParser\Task4_FileParser.csproj", "{BC7D5CC8-9557-4A15-8A94-158A03B63E9D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileParser.Test", "FileParser.Test\FileParser.Test.csproj", "{CF0F1DAB-F80F-441B-A2E1-8981CD527BD0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BC7D5CC8-9557-4A15-8A94-158A03B63E9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC7D5CC8-9557-4A15-8A94-158A03B63E9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC7D5CC8-9557-4A15-8A94-158A03B63E9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF0F1DAB-F80F-441B-A2E1-8981CD527BD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF0F1DAB-F80F-441B-A2E1-8981CD527BD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF0F1DAB-F80F-441B-A2E1-8981CD527BD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF0F1DAB-F80F-441B-A2E1-8981CD527BD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
